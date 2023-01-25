@@ -9,7 +9,7 @@ const searchInput = document.querySelector(".search-form input[name='searchQuery
 const loadMore = document.querySelector(".load-more");
 let valueSave = '';
 let pageNumber = 1;
-let numCard;
+let numCard = 1;
 loadMore.style.display = 'none'
 function onBtnSearch(e) {
     e.preventDefault();
@@ -27,6 +27,7 @@ function onBtnSearch(e) {
                 Notiflix.Notify.success(`"Hooray! We found ${foundData.data.totalHits} images."`);
                 numCard += 40;
                 valueSave = inputValue
+                loadMore.style.display = 'none'
             }
             else {
                 makeMurkup(foundData.data.hits);
@@ -46,22 +47,19 @@ function onBtnSearch(e) {
 
 function btnLoadMore(e) {
     e.preventDefault;
-    const inputValue = searchInput.value;
     pageNumber++
-   
+    numCard += 40;
     if (valueSave !== '') {
         getPhoto(valueSave, pageNumber).then(foundData => {
             if (numCard < foundData.data.totalHits) {
-                 makeMurkup(foundData.data.hits);
-                 Notiflix.Notify.success(`Add new photo`);
-                //  loadMore.style.display = 'flex'
-                numCard += 40;
-                
-            } else
+                makeMurkup(foundData.data.hits);
+                Notiflix.Notify.success(`Add new photo`);
+                // console.log(numCard)
+            } else {
                 makeMurkup(foundData.data.hits);
                 Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
                 loadMore.style.display = 'none';
-
+            }
         })
        
     } 
